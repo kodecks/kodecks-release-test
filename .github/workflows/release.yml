@@ -6,7 +6,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  BEVY_ASSET_PATH: "/home/runner/work/kodecks-release-test/kodecks-release-test/kodecks-bevy/assets"
+  BEVY_ASSET_PATH: "/project/kodecks/kodecks-bevy/assets"
 
 jobs:
   release-linux:
