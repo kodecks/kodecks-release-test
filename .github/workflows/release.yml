@@ -6,6 +6,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  BEVY_ASSET_PATH: "kodecks-bevy/assets"
 
 jobs:
   release-linux:
@@ -22,6 +23,6 @@ jobs:
         run: cargo install cross --git https://github.com/cross-rs/cross
         continue-on-error: true
       - name: Build project
-        run: cross build -p taxy --profile production --target ${{ matrix.toolchain }}
+        run: cross build -p kodecks --profile production --features embed_assets --target ${{ matrix.toolchain }}
       - name: Make archive
         run: tar -C target/${{ matrix.toolchain }}/release -Jcvf kodecks-${{ matrix.toolchain }}.tar.xz kodecks
