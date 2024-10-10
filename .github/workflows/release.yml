@@ -10,11 +10,28 @@ env:
 
 jobs:
   release-linux:
-    strategy:
-      matrix:
-        toolchain: [x86_64-unknown-linux-gnu, aarch64-unknown-linux-gnu]
     name: Upload Release Assets
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain: [x86_64-unknown-linux-gnu]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.10.3
+      - name: Install cross
+        run: cargo binstall cross --force -y
+      - name: Build project
+        run: cross build -p kodecks-bevy --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
+      - name: Make archive
+        run: tar -C target/${{ matrix.toolchain }}/release -Jcvf kodecks-${{ matrix.toolchain }}.tar.xz kodecks
+
+  release-macos:
+    name: Upload Release Assets (macOS)
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        toolchain: [aarch64-apple-darwin, aarch64-unknown-linux-gnu]
     steps:
       - uses: actions/checkout@v4
       - name: Install cargo-binstall
