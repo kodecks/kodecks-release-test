@@ -25,7 +25,7 @@ jobs:
       - name: Build project
         run: cross build -p kodecks-bevy --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
       - name: Make archive
-        run: tar -C target/${{ matrix.toolchain }}/release -Jcvf kodecks-${{ matrix.toolchain }}.tar.xz kodecks
+        run: tar -C target/${{ matrix.toolchain }}/distribution -Jcvf kodecks-${{ matrix.toolchain }}.tar.xz kodecks
 
   release-macos:
     name: Upload Release Assets (macOS)
@@ -42,4 +42,4 @@ jobs:
       - name: Build project
         run: cross build -p kodecks-bevy --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
       - name: Make archive
-        run: tar -C target/${{ matrix.toolchain }}/release -Jcvf kodecks-${{ matrix.toolchain }}.tar.xz kodecks
+        run: tar -C target/${{ matrix.toolchain }}/distribution -Jcvf kodecks-${{ matrix.toolchain }}.tar.xz kodecks
