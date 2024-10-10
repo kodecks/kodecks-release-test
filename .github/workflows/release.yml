@@ -31,16 +31,14 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        toolchain: [aarch64-apple-darwin, aarch64-unknown-linux-gnu]
+        toolchain: [aarch64-apple-darwin]
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Docker on macOS
-        run: brew install docker
-      - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@v1.10.3
-      - name: Install cross
-        run: cargo binstall cross --force -y
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: ${{ matrix.toolchain }}
+      - uses: Swatinem/rust-cache@v2
       - name: Build project
-        run: cross build -p kodecks-bevy --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
+        run: cargo build -p kodecks-bevy --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
       - name: Make archive
         run: tar -C target/${{ matrix.toolchain }}/distribution -Jcvf kodecks-${{ matrix.toolchain }}.tar.xz kodecks
