@@ -6,12 +6,13 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  BEVY_ASSET_PATH: "/project/kodecks-bevy/assets"
 
 jobs:
   release-linux:
     name: Upload Release Assets
     runs-on: ubuntu-latest
+    env: 
+      BEVY_ASSET_PATH: "/project/kodecks-bevy/assets"
     strategy:
       matrix:
         toolchain: [x86_64-unknown-linux-gnu]
@@ -29,6 +30,8 @@ jobs:
   release-macos:
     name: Upload Release Assets (macOS)
     runs-on: macos-latest
+    env: 
+      BEVY_ASSET_PATH: "kodecks-bevy/assets"
     strategy:
       matrix:
         toolchain: [aarch64-apple-darwin]
@@ -42,3 +45,24 @@ jobs:
         run: cargo build -p kodecks-bevy --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
       - name: Make archive
         run: tar -C target/${{ matrix.toolchain }}/distribution -Jcvf kodecks-${{ matrix.toolchain }}.tar.xz kodecks
+
+  release-windows:
+    name: Upload Release Assets (Windows)
+    runs-on: windows-latest
+    env: 
+      BEVY_ASSET_PATH: "kodecks-bevy/assets"
+    strategy:
+      matrix:
+        toolchain: [x86_64-pc-windows-msvc]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: ${{ matrix.toolchain }}
+      - uses: Swatinem/rust-cache@v2
+      - name: Build project
+        run: cargo build -p kodecks-bevy --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
+      - name: Make archive
+        run: tar -C target/${{ matrix.toolchain }}/distribution -acf kodecks-${{ matrix.toolchain }}.zip kodecks.exe
+      - name: Make archive
+        run: msys2 -c 'cp target/${{ matrix.toolchain }}/distribution/kodecks.exe . && tar cf kodecks-${{ matrix.toolchain }}.tar kodecks.exe && xz *.tar'
