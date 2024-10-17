@@ -23,9 +23,11 @@ jobs:
       - name: Install cross
         run: cargo binstall cross --force -y
       - name: Build project
-        run: cross build -p kodecks-bevy --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
+        run: cross build -p kodecks-bevy -p kodecks-server --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
       - name: Make archive
         run: tar -C target/${{ matrix.toolchain }}/distribution -Jcvf kodecks-${{ matrix.toolchain }}.tar.xz kodecks
+      - name: Make archive
+        run: tar -C target/${{ matrix.toolchain }}/distribution -Jcvf kodecks-server-${{ matrix.toolchain }}.tar.xz kodecks-server
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,9 +53,11 @@ jobs:
           target: ${{ matrix.toolchain }}
       - uses: Swatinem/rust-cache@v2
       - name: Build project
-        run: cargo build -p kodecks-bevy --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
+        run: cargo build -p kodecks-bevy -p kodecks-server --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
       - name: Make archive
         run: tar -C target/${{ matrix.toolchain }}/distribution -Jcvf kodecks-${{ matrix.toolchain }}.tar.xz kodecks
+      - name: Make archive
+        run: tar -C target/${{ matrix.toolchain }}/distribution -Jcvf kodecks-server-${{ matrix.toolchain }}.tar.xz kodecks-server
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,9 +83,11 @@ jobs:
           target: ${{ matrix.toolchain }}
       - uses: Swatinem/rust-cache@v2
       - name: Build project
-        run: cargo build -p kodecks-bevy --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
+        run: cargo build -p kodecks-bevy -p kodecks-server --profile distribution --features embed_assets --target ${{ matrix.toolchain }}
       - name: Make archive
         run: tar -C target/${{ matrix.toolchain }}/distribution -acf kodecks-${{ matrix.toolchain }}.zip kodecks.exe
+      - name: Make archive
+        run: tar -C target/${{ matrix.toolchain }}/distribution -acf kodecks-server-${{ matrix.toolchain }}.zip kodecks-server.exe
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -91,3 +97,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload ${{ github.ref_name }} kodecks-${{ matrix.toolchain }}.zip
+      - name: Upload archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ github.ref_name }} kodecks-server-${{ matrix.toolchain }}.zip
