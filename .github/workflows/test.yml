@@ -3,14 +3,6 @@ name: Test
 on:
   push:
     branches: ["main"]
-    paths:
-      - "**/*.rs"
-      - "**/*.toml"
-  pull_request:
-    branches: ["main"]
-    paths:
-      - "**/*.rs"
-      - "**/*.toml"
 
 env:
   CARGO_TERM_COLOR: always
