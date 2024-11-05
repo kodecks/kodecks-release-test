@@ -6,6 +6,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  BEVY_ASSET_PATH: ${{ github.workspace }}/kodecks-bevy/assets
 
 jobs:
   test:
@@ -26,8 +27,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libasound2-dev libudev-dev
       - name: Run build
-        run: cargo build
+        run: cargo build --all-features
       - name: Run test
-        run: cargo test
+        run: cargo test --all-features
       - name: Run clippy
-        run: cargo clippy
+        run: cargo clippy --all-features
+        
